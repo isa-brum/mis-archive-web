@@ -154,18 +154,16 @@ function acimaDasFrases(cena, grupo, centro, { escala = 0.92, novoCentroY = 545 
   });
 }
 
-// "menu" (About e tela final): canto de cima, à esquerda, da tela.
-// A mesma distância do topo que o "sobre" tem da base.
-function posicionarNoCantoDeCima(cena, el) {
+// "menu" (About e tela final) e "pt en" (menu): canto de cima, à esquerda, da tela
+function posicionarNoCantoDeCima(cena, el, topo = CONFIG.topoDoMenu, topoNoIPhone = CONFIG.topoDoMenuNoIPhone) {
   el.classList.add("pela-esquerda");
   cena.aoMedir((m) => {
-    const c = m.canto(CONFIG.margemDosCantos);
-    el.style.left = c.esq + "px";
-    el.style.top = c.topo + distanciaDaBorda(m) - CONFIG.margemDosCantos + "px";
+    el.style.left = m.canto(CONFIG.margemDosCantos).esq + "px";
+    el.style.top = m.canto(0).topo + misturar(topo, topoNoIPhone, m.k) + "px";
   });
 }
 
-// Distância do centro dos botões de texto até a borda da tela, em cima ou embaixo
+// Distância do centro do "sobre" até a borda de baixo da tela
 function distanciaDaBorda(m) {
   const C = CONFIG;
   return misturar((m.base - m.topo) * (1 - C.fracaoDoAbout), C.margemDoCorteInferior + C.meiaAlturaDosBotoesDeTexto, m.k);

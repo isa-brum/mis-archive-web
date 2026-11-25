@@ -40,7 +40,11 @@ const CONFIG = {
   meiaAlturaDosBotoesDeTexto: 57,
   mostrarBotaoDeIdioma: true, // "pt en" no canto de cima, à esquerda, do menu
   tamanhoDosBotoes: 0.85, // "sobre", "menu" e "jogar" (1 = tamanho do app)
-  margemDosCantos: 80, // distância dos textos de canto até a borda da tela
+  margemDosCantos: 80, // distância lateral de "sobre", "menu", "pt en" e "jogar" até a borda da tela
+  bordaVaziaDoPlay: 0.049, // parte transparente de cada lado da arte do botão jogar
+  // Distância do centro de "menu" e "pt en" até o topo da tela
+  topoDoMenu: 92, topoDoMenuNoIPhone: 74,
+  topoDoIdioma: 52, topoDoIdiomaNoIPhone: 74, // no iPad fica mais alto, para caber acima do papel do título
 
   // ANIMAÇÃO
   duracaoDoQuadro: 0.12, // stop motion

@@ -13,7 +13,7 @@ async function abrirMenu(anterior) {
     // o "pt en" do canto não ficar por cima do papel.
     const emPe = Math.max(0, -m.tela.topo) * 0.45;
     const colado = limitar(1 - Math.max(0, -m.tela.esq) / 160, 0, 1);
-    titulo.style.top = misturar(322.1, 362.1 + 50 * colado, m.k) - emPe + "px";
+    titulo.style.top = misturar(322.1, 362.1 + 28 * colado, m.k) - emPe + "px";
   });
 
   const jogar = botao({
@@ -28,8 +28,8 @@ async function abrirMenu(anterior) {
   sobre.classList.add("pela-esquerda");
   cena.aoMedir((m) => {
     const C = CONFIG, altura = m.base - m.topo, t = C.tamanhoDosBotoes;
-    // As mesmas margens de antes até o canto da tela, agora com os botões menores
-    jogar.style.left = m.canto(0).dir - 307.2 * t + "px";
+    // O papelão do "jogar" fica à mesma distância da borda que o "sobre" (a arte tem uma beirada transparente)
+    jogar.style.left = m.canto(C.margemDosCantos).dir - 614.4 * t * (0.5 - C.bordaVaziaDoPlay) + "px";
     const distanciaDoJogar = altura * (1 - misturar(C.fracaoDoPlay, C.fracaoDoPlayNoIPhone, m.k));
     jogar.style.top = m.canto(0).base - distanciaDoJogar + 152.6 * (1 - t) + "px";
     sobre.style.left = m.canto(C.margemDosCantos).esq + "px";
@@ -62,10 +62,6 @@ function botoesDeIdioma(cena) {
     });
     el.append(b);
   }
-  cena.aoMedir((m) => {
-    const c = m.canto(CONFIG.margemDosCantos);
-    el.style.left = c.esq + "px";
-    el.style.top = c.topo - CONFIG.margemDosCantos + misturar(60, distanciaDaBorda(m), m.k) + "px";
-  });
+  posicionarNoCantoDeCima(cena, el, CONFIG.topoDoIdioma, CONFIG.topoDoIdiomaNoIPhone);
   return el;
 }
