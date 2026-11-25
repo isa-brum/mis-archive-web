@@ -6,7 +6,7 @@ os mesmos textos e as mesmas posições do app. Português e inglês.
 ## Abrir no VS Code
 
 1. **File › Open Folder…** e escolha a pasta `MIS Archive Web`.
-2. Aperte **Cmd + Shift + B**. O jogo abre em http://localhost:8123.
+2. Aperte **Cmd + Shift + B**. O jogo abre em http://localhost:8130.
    (Ou instale a extensão **Live Server** e clique em **Go Live**, no canto de baixo.)
 
 Para parar: clique na lixeira do terminal.
@@ -38,7 +38,7 @@ Para tirar o botão do menu: `mostrarBotaoDeIdioma: false` em `js/config.js`.
 
 ## Testar
 
-- Vários formatos de tela juntos: http://localhost:8123/ferramentas/telas.html?lang=pt
+- Vários formatos de tela juntos: http://localhost:8130/ferramentas/telas.html?lang=pt
 - Direto em uma tela: `index.html?cena=missao2` (about, missao1, ar, missao2, missao3, mesa)
 - Regra do corte em 22 mil formatos: `node ferramentas/conferir_palco.js`
 
