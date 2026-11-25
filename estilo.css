@@ -1,0 +1,197 @@
+/* MIS Archive — versão web
+   Medidas dentro do palco em pixels do canvas 2048 × 1536 (as mesmas do app).
+   O palco inteiro é escalado para a tela em js/palco.js. */
+
+@font-face {
+  font-family: "Gibi"; font-weight: 400;
+  src: url("assets/fontes/Fonteisabrumgibi-Regular.otf") format("opentype");
+}
+@font-face {
+  font-family: "Gibi"; font-weight: 700;
+  src: url("assets/fontes/Fonteisabrumgibi-Bold.otf") format("opentype");
+}
+@font-face {
+  font-family: "Manuscrita";
+  src: url("assets/fontes/IsaBrumManuscrita-Regular.otf") format("opentype");
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+#tela { position: fixed; inset: 0; overflow: hidden; background: #000; }
+
+.cena { position: absolute; inset: 0; overflow: hidden; background: #000; }
+
+.palco {
+  position: absolute; left: 0; top: 0;
+  width: 2048px; height: 1536px;
+  transform-origin: 0 0;
+  overflow: hidden;
+  background: #000;
+  font-family: "Gibi", sans-serif;
+  line-height: 0.77; /* altura de linha que o app usa com a fonte do jogo (medida nos screenshots) */
+  font-synthesis: none; /* a fonte não tem itálico: como no app, ele não é inventado */
+}
+
+/* CAMADAS E PEÇAS */
+.cheia { position: absolute; left: 0; top: 0; width: 2048px; height: 1536px; }
+.sem-toque { pointer-events: none; }
+img { display: block; pointer-events: none; -webkit-user-drag: none; }
+img[data-quadro] { visibility: hidden; }
+img[data-quadro].visivel { visibility: visible; }
+
+.peca {
+  position: absolute;
+  transform: translate(-50%, -50%) translate(var(--dx, 0px), var(--dy, 0px)) rotate(var(--giro, 0deg)) scale(var(--escala, 1));
+}
+.peca > img { width: 100%; height: 100%; object-fit: contain; }
+
+/* No meio da área visível, cabendo na largura visível */
+.grupo-central { transform: translateY(var(--ajuste-centro)) scale(var(--fator)); pointer-events: none; }
+.grupo-central .botao { pointer-events: auto; }
+
+.desfocavel { transition: filter 0.3s ease-in-out; }
+
+/* BOTÕES */
+.botao {
+  appearance: none; background: none; border: 0; padding: 0; margin: 0;
+  color: inherit; font: inherit; cursor: pointer;
+  touch-action: manipulation;
+}
+.botao:disabled { cursor: default; pointer-events: none; }
+.peca.botao::after { /* área de toque mínima, invisível */
+  content: ""; position: absolute; left: 50%; top: 50%;
+  width: max(100%, var(--toque)); height: max(100%, var(--toque));
+  transform: translate(-50%, -50%);
+}
+.botao:active:not(:disabled) > img { opacity: 0.7; }
+.botao:focus { outline: none; }
+.botao:focus-visible { outline: 6px solid var(--BrilhoExterno); outline-offset: 6px; border-radius: 12px; }
+.cobertura:focus-visible { outline-offset: -10px; }
+
+.botao-texto {
+  color: var(--BrancoBase);
+  font-weight: 700; font-size: 104.1px; line-height: 1;
+  text-decoration: underline;
+  text-decoration-thickness: 6px;
+  text-underline-offset: 16px;
+  white-space: nowrap;
+}
+
+.idiomas {
+  position: absolute; display: flex; gap: 30px; align-items: baseline;
+  transform: translate(-50%, -50%);
+  color: var(--BrancoBase); font-size: 74px; line-height: 1;
+}
+.idiomas .botao { position: relative; opacity: 0.55; font-weight: 700; }
+.idiomas .botao[aria-pressed="true"] {
+  opacity: 1; text-decoration: underline; text-decoration-thickness: 5px; text-underline-offset: 13px;
+}
+.idiomas .botao::after {
+  content: ""; position: absolute; left: 50%; top: 50%;
+  width: max(100%, min(var(--toque), 150px)); height: max(100%, var(--toque));
+  transform: translate(-50%, -50%);
+}
+
+/* Brilho ao redor do que pode ser clicado e sombra das gavetas */
+.peca > img, .peca > .forma { transition: filter 0.3s; }
+.brilho > img { filter: drop-shadow(0 0 20.8px rgba(252, 240, 180, 0.8)); }
+.gaveta > img { filter: drop-shadow(6.94px 10.41px 1.74px var(--SombraGaveta)); }
+.gaveta.brilho > img {
+  filter: drop-shadow(0 0 20.8px rgba(252, 240, 180, 0.8)) drop-shadow(6.94px 10.41px 1.74px var(--SombraGaveta));
+}
+.sombra-postit { filter: drop-shadow(20.8px 27.8px 2.4px rgba(0, 0, 0, 0.8)); }
+
+/* TEXTOS */
+.feedback {
+  color: var(--TextoFeedback);
+  font-size: 78.1px; text-align: center;
+  text-shadow: 0 0 34.8px rgba(252, 240, 180, 0.7), 0 0 3.4px rgba(252, 240, 180, 0.2);
+  text-wrap: balance; /* sem palavra sozinha na última linha */
+  pointer-events: none;
+}
+.comentario {
+  color: var(--CinzaTexto);
+  font-size: 72.9px;
+  display: flex; align-items: center; justify-content: center;
+}
+.comentario > div { transform: rotate(-2.4deg); }
+.frases-de-fim {
+  position: absolute; pointer-events: none;
+  display: flex; flex-direction: column; align-items: center; gap: 17.4px;
+  color: var(--BrancoBase); text-align: center;
+}
+.frases-de-fim strong { font-size: 118px; font-weight: 700; opacity: 0.8; max-width: 1761.3px; }
+.frases-de-fim p { font-size: 86.8px; opacity: 0.8; margin: 0; max-width: 1638.4px; }
+
+/* CARREGANDO: a fita desenhada, pulsando */
+.carregando {
+  position: absolute; inset: 0; z-index: 50;
+  background: rgba(0, 0, 0, 0.6) url("assets/imagens/Fita.png") center / min(120px, 18vw) auto no-repeat;
+  animation: pulsar 1.2s ease-in-out infinite alternate;
+}
+@keyframes pulsar { from { opacity: 0.35; } to { opacity: 1; } }
+
+/* AVISO PARA VIRAR O CELULAR (só em telas de toque em pé) */
+#aviso-girar {
+  position: fixed; left: 24px; right: 24px; top: 0; margin: 0; z-index: 40;
+  transform: translateY(-50%);
+  font-family: "Gibi", sans-serif; font-size: 20px; text-align: center;
+  color: var(--TextoFeedback);
+  text-shadow: 0 0 10px rgba(252, 240, 180, 0.6);
+  opacity: 0; pointer-events: none; transition: opacity 0.6s;
+}
+#aviso-girar.visivel { opacity: 1; }
+
+/* PAPÉIS */
+.texto-do-papel { color: var(--CinzaTexto); font-size: 100.7px; }
+.texto-do-staff { color: var(--CinzaTitulo); font-size: 81.6px; text-align: center; }
+.texto-do-staff span { display: block; }
+.texto-do-staff .manuscrita { font-family: "Manuscrita", sans-serif; font-size: 126.7px; line-height: 0.82; white-space: nowrap; }
+
+/* ABOUT */
+.texto-do-about {
+  position: absolute; display: flex; flex-direction: column; overflow: hidden;
+  color: var(--BrancoBase); text-align: left;
+}
+
+/* INVENTÁRIO */
+.objeto { pointer-events: auto; cursor: grab; touch-action: none; transition: transform 0.45s cubic-bezier(0.3, 1.35, 0.5, 1); }
+.objeto.arrastando { cursor: grabbing; transition: none; z-index: 1; }
+.silhueta { opacity: 0.72; }
+.silhueta > img { position: absolute; inset: 0; }
+.silhueta > .borda { filter: brightness(0) invert(0.957); }
+.silhueta > .miolo { filter: brightness(0) invert(0.345); }
+
+/* AR */
+.seletor { cursor: grab; touch-action: none; }
+.seletor:active { cursor: grabbing; }
+[hidden] { display: none !important; }
+.close-do-ar { filter: drop-shadow(17.4px 20.8px 1.74px #000); }
+.close-do-ar > img { transform: scale(1.1115); }
+.display-do-ar > img { opacity: 0.8; filter: drop-shadow(1.74px 1.74px 0.4px #000); }
+.sombra-do-seletor { opacity: 0.85; }
+.sombra-do-seletor > img { filter: brightness(0); }
+
+/* SALA */
+.camada-da-mesa { transform: rotate(10deg); }
+.camada-da-mesa > .botao:not(:disabled) { pointer-events: auto; }
+.conversor-coletavel > img { filter: drop-shadow(6.94px 3.47px 1.74px var(--SombraGaveta)); }
+
+/* MESA */
+.janela-do-video { position: absolute; overflow: hidden; }
+.janela-do-video video { position: absolute; left: 0; width: 100%; object-fit: cover; opacity: 0.9; }

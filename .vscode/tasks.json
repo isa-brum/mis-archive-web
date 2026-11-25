@@ -1,0 +1,14 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Abrir o jogo (http://localhost:8123)",
+      "type": "shell",
+      "command": "(sleep 1; open http://localhost:8123) & python3 -m http.server 8123",
+      "isBackground": true,
+      "problemMatcher": [],
+      "group": { "kind": "build", "isDefault": true },
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    }
+  ]
+}

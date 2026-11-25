@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <title>MIS Archive</title>
+  <link rel="icon" href="assets/imagens/AppIcon.jpg">
+  <link rel="apple-touch-icon" href="assets/imagens/AppIcon.jpg">
+  <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+  <!-- Tudo aparece dentro de #tela; cada cena monta aqui o seu palco 4:3 -->
+  <main id="tela"></main>
+  <p id="aviso-girar" aria-hidden="true"></p>
+
+  <!-- Dados gerados a partir do app (ferramentas/copiar_assets.py) -->
+  <script src="dados/textos.js"></script>
+  <script src="dados/cores.js"></script>
+  <script src="dados/imagens.js"></script>
+
+  <!-- Base -->
+  <script src="js/config.js"></script>
+  <script src="js/idioma.js"></script>
+  <script src="js/palco.js"></script>
+  <script src="js/pecas.js"></script>
+  <script src="js/carregador.js"></script>
+
+  <!-- Peças do jogo -->
+  <script src="js/papeis.js"></script>
+  <script src="js/quadro.js"></script>
+  <script src="js/inventario.js"></script>
+
+  <!-- Telas, na ordem do jogo -->
+  <script src="js/menu.js"></script>
+  <script src="js/about.js"></script>
+  <script src="js/missao1.js"></script>
+  <script src="js/ar.js"></script>
+  <script src="js/missao2.js"></script>
+  <script src="js/missao3.js"></script>
+  <script src="js/mesa.js"></script>
+  <script src="js/inicio.js"></script>
+</body>
+</html>

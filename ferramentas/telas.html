@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<!-- Para desenvolvimento: mostra o jogo em vários formatos de tela ao mesmo tempo.
+     Abra http://localhost:8123/ferramentas/telas.html?cena=missao2&lang=pt -->
+<html lang="pt-BR">
+<meta charset="utf-8">
+<title>Formatos de tela</title>
+<script src="jogar.js"></script>
+<style>
+  body { margin: 8px; background: #555; font: 11px system-ui; color: #fff; display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start; }
+  figure { margin: 0; }
+  div { overflow: hidden; outline: 1px solid #999; }
+  iframe { border: 0; transform-origin: 0 0; background: #000; }
+</style>
+<script>
+  const formatos = [
+    ["iPhone deitado", 844, 390], ["iPhone no Safari", 750, 320], ["iPhone SE deitado", 667, 331],
+    ["iPad 4:3", 1024, 768], ["iPad Air 11", 1180, 820], ["iPad em pé", 768, 1024],
+    ["MacBook", 1440, 789], ["Full HD", 1920, 969], ["Ultrawide", 2560, 1080],
+    ["Quadrada", 800, 800], ["Janela estreita", 500, 800], ["Celular em pé", 390, 844],
+  ];
+  const q = new URLSearchParams(location.search);
+  const lado = Number(q.get("lado") || 225);
+  const so = q.get("so")?.split(",").map(Number);
+  q.delete("lado"); q.delete("so");
+  formatos.forEach(([nome, L, A], i) => {
+    if (so && !so.includes(i)) return;
+    const s = Math.min(lado / L, lado / A);
+    document.write(`<figure>${nome} ${L}×${A}<div style="width:${L * s}px;height:${A * s}px">
+      <iframe src="../index.html?${q}" style="width:${L}px;height:${A}px;transform:scale(${s})"></iframe></div></figure>`);
+  });
+</script>
+</html>
