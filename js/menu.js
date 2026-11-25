@@ -31,9 +31,9 @@ async function abrirMenu(anterior) {
     // O papelão do "jogar" fica à mesma distância da borda que o "sobre" (a arte tem uma beirada transparente)
     jogar.style.left = m.canto(C.margemDosCantos).dir - 614.4 * t * (0.5 - C.bordaVaziaDoPlay) + "px";
     const distanciaDoJogar = altura * (1 - misturar(C.fracaoDoPlay, C.fracaoDoPlayNoIPhone, m.k));
-    jogar.style.top = m.canto(0).base - distanciaDoJogar + 152.6 * (1 - t) + "px";
+    jogar.style.top = m.tela.base - distanciaDoJogar + 152.6 * (1 - t) + "px";
     sobre.style.left = m.canto(C.margemDosCantos).esq + "px";
-    sobre.style.top = m.canto(C.margemDosCantos).base - distanciaDaBorda(m) + C.margemDosCantos + "px";
+    sobre.style.top = m.tela.base - distanciaDaBorda(m) + "px";
   });
 
   cena.adicionar(fundo(cena, "FundoMenu"), escuro(0.1), titulo, sobre, jogar);
@@ -57,7 +57,7 @@ function botoesDeIdioma(cena) {
     b.addEventListener("click", () => {
       if (Idioma.atual === codigo) return;
       Idioma.definir(codigo);
-      atualizarAvisoDeGirar();
+      atualizarBloqueio();
       abrirMenu(cena);
     });
     el.append(b);

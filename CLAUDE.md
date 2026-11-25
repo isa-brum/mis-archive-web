@@ -13,6 +13,6 @@ fica em `../MIS Archive` e tem seu próprio `CLAUDE.md`; as regras de lá valem 
   e olhar `ferramentas/telas.html`.
 - Altura de linha 0,77: o SwiftUI ignora o lineGap da fonte, o navegador não. Não trocar por `normal`.
 - Diferenças de propósito em relação ao app: sem pedido de avaliação; botão "pt en" no canto de cima, à esquerda, do menu;
-  "sobre", "menu" e "jogar" a 85%; sem faixas pretas (continuação do cenário, `fundo()` em `js/pecas.js`); o corte muda aos poucos
-  com a proporção da janela; no celular em pé aparece um aviso para virar; na Missão 1 a primeira gaveta não é
+  "sobre", "menu" e "jogar" a 85%; sem faixas pretas no computador e no tablet (continuação do cenário, `fundo()` em `js/pecas.js`); o corte muda aos poucos
+  com a proporção da janela; no celular (`ehCelular`) valem as regras da versão de iPhone, com faixas pretas, e em pé o jogo é bloqueado; na Missão 1 a primeira gaveta não é
   clicável (no app ela chama imagens que não existem); na mesa, cada objeto só vale no seu lugar.

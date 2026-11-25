@@ -26,9 +26,18 @@ Para parar: clique na lixeira do terminal.
 
 Toda cena é montada em 2048 × 1536 e escalada inteira. O corte nunca passa do da versão de iPhone:
 aparece sempre, no mínimo, do pixel 89 ao 1318 (altura) e do 49 ao 1999 (largura).
-Não há faixas pretas: o que sobrar de tela é preenchido pela continuação do próprio cenário (a beirada lisa da parede,
+**Computador e tablet:** não há faixas pretas. O que sobrar de tela é preenchido pela continuação do próprio cenário (a beirada lisa da parede,
 do chão ou da mesa se estende, escurecendo até a borda; a foto não é cortada nem alterada). Ajustes em `FUNDOS`, no fim
 do `js/config.js`. Botões de canto e inventário vão para os cantos da tela, sem entrar embaixo do notch.
+
+**Celular:** valem as regras da versão de iPhone do app (`CONFIG_DO_CELULAR` em `js/config.js`): foto com o corte do iPhone,
+faixas pretas nas laterais, botões e inventário dentro da foto. Em pé, o jogo fica bloqueado com o aviso para virar.
+Para ver no computador: `index.html?celular=1` numa janela pequena.
+
+## Publicar
+
+Site: https://misarchive.isabellabrum.com (GitHub Pages, repositório `mis-archive-web`; não apague o arquivo `CNAME`).
+Antes de enviar, aumente o `?v=` no `index.html`.
 
 ## Idioma
 

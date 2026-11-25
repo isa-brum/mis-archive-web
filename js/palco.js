@@ -8,7 +8,8 @@ const misturar = (a, b, t) => a + (b - a) * t;
 
 // Calcula escala, corte e área visível para uma janela de L × A
 // posicao: onde a arte fica quando sobra altura. segura: áreas do notch etc., em pixels da tela.
-function medirPalco(L, A, ancora, posicao = 0.5, segura = { esq: 0, dir: 0, topo: 0, base: 0 }) {
+// soAFoto (celular): faixas pretas nas laterais, com tudo dentro da foto, como no app de iPhone.
+function medirPalco(L, A, ancora, posicao = 0.5, segura = { esq: 0, dir: 0, topo: 0, base: 0 }, soAFoto = false) {
   const C = CONFIG;
   const encaixar = Math.min(L / C.largura, A / C.altura);
   const preencher = Math.max(L / C.largura, A / C.altura);
@@ -17,7 +18,7 @@ function medirPalco(L, A, ancora, posicao = 0.5, segura = { esq: 0, dir: 0, topo
   const zoom = escala / encaixar;
 
   // 0 = enquadramento do iPad, 1 = enquadramento do iPhone
-  const k = telaLarga ? limitar((zoom - C.zoomDoIPad) / (C.zoomMaximo - C.zoomDoIPad), 0, 1) : 0;
+  const k = telaLarga ? (soAFoto ? 1 : limitar((zoom - C.zoomDoIPad) / (C.zoomMaximo - C.zoomDoIPad), 0, 1)) : 0;
 
   const sobraX = L - C.largura * escala;
   const sobraY = A - C.altura * escala;
@@ -34,6 +35,10 @@ function medirPalco(L, A, ancora, posicao = 0.5, segura = { esq: 0, dir: 0, topo
   const dx = sobraX / 2; // continuação e corte laterais sempre centralizados
   const dy = sobraY >= 0 ? sobraY * posicao : -corteSup * escala;
   const tela = { esq: -dx / escala, dir: (L - dx) / escala, topo: -dy / escala, base: (A - dy) / escala };
+  if (soAFoto) {
+    Object.assign(tela, { esq: corteLado, dir: C.largura - corteLado, topo: corteSup, base: C.altura - corteInf });
+    segura = { esq: segura.esq - Math.max(0, dx), dir: segura.dir - Math.max(0, dx), topo: 0, base: 0 };
+  }
   // Canto da tela com uma margem, sem entrar embaixo do notch
   const canto = (margem) => ({
     esq: tela.esq + Math.max(margem, segura.esq / escala), dir: tela.dir - Math.max(margem, segura.dir / escala),
@@ -82,11 +87,12 @@ class Cena {
 
   medir() {
     const tela = document.getElementById("tela");
-    const m = this.m = medirPalco(tela.clientWidth || innerWidth, tela.clientHeight || innerHeight, this.ancora, this.posicao, areaSegura());
+    const m = this.m = medirPalco(tela.clientWidth || innerWidth, tela.clientHeight || innerHeight, this.ancora, this.posicao, areaSegura(), ehCelular);
     this.palco.style.transform = `translate(${m.dx}px, ${m.dy}px) scale(${m.escala})`;
     this.palco.style.setProperty("--toque", m.toque + "px");
     this.palco.style.setProperty("--ajuste-centro", m.ajusteCentro + "px");
     this.palco.style.setProperty("--fator", m.fator);
+    for (const lado of ["esq", "dir", "topo", "base"]) this.palco.style.setProperty("--tela-" + lado, m.tela[lado] + "px");
     for (const f of this.ouvintes) f(m);
   }
 

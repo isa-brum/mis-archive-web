@@ -136,7 +136,11 @@ async function abrirMesa(anterior, itens) {
     sumir(fade, CONFIG.fadeDoVideo);
 
     // O vídeo toca inteiro (com um limite, caso o navegador não consiga tocar)
-    await Promise.race([terminou, cena.esperar(CONFIG.duracaoDoVideo + ((await tocou) ? 4 : 0))]);
+    const limite = CONFIG.duracaoDoVideo + ((await tocou) ? 4 : 0);
+    const passouDoLimite = (async () => { // o tempo só conta com o celular deitado
+      for (let t = 0; t < limite; t += emPe ? 0 : 0.5) await cena.esperar(0.5);
+    })();
+    await Promise.race([terminou, passouDoLimite]);
     fim(monitor);
   }
 

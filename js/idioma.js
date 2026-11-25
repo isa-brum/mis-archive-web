@@ -27,10 +27,18 @@ const Idioma = {
 // Tela de toque (celular, tablet) ou mouse (computador): muda "toque" / "clique"
 const telaDeToque = window.matchMedia("(pointer: coarse)").matches;
 
+// Celular: tela de toque pequena. Nele valem as regras da versão de iPhone (CONFIG_DO_CELULAR).
+// Para testar no computador: index.html?celular=1
+const ehCelular = new URLSearchParams(location.search).get("celular") === "1"
+  || (telaDeToque && Math.min(screen.width, screen.height) < ladoMaximoDoCelular);
+if (ehCelular) Object.assign(CONFIG, CONFIG_DO_CELULAR);
+document.documentElement.classList.toggle("celular", ehCelular);
+
 // Textos que só existem na versão web
 const TEXTOS_WEB = {
   "MIS Archive": { en: "MIS Archive", pt: "Arquivo do MIS" },
-  "girar": { en: "turn your phone sideways to play on a bigger screen", pt: "vire o celular para jogar em tela maior" },
+  "girar": { en: "turn your phone sideways to play", pt: "vire o celular para jogar" },
+  "trava": { en: "if nothing happens, turn off the rotation lock", pt: "se nada acontecer, desligue a trava de rotação" },
   // Nomes dos botões para leitores de tela
   "Play": { en: "Play", pt: "Jogar" },
   "Previous": { en: "Previous", pt: "Anterior" },

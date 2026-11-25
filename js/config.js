@@ -69,4 +69,15 @@ const FUNDOS = {
   CenarioBaseMesa: { esq: 26, dir: 26,  topo: 440, base: 30, posicao: 0.6, nitido: true },
   FundoAbout:      { esq: 8,  dir: 8,   topo: 130, base: 24, posicao: 0.5 },
 };
+// CELULAR — as regras da versão de iPhone do app (valem só no celular, sempre deitado):
+// a foto com o corte do iPhone, faixas pretas nas laterais, e botões e inventário dentro da foto.
+// Estes valores trocam os de cima.
+const CONFIG_DO_CELULAR = {
+  // "sobre", "menu" e "jogar" seguem a 85%: com a margem igual à do "sobre", o "jogar" inteiro encostaria na gaveta
+  margemDosCantos: 100,
+  topoDoMenuNoIPhone: 97,
+  letraFixaDoAbout: 55,
+};
+const ladoMaximoDoCelular = 600; // lado menor do aparelho, em pixels (um iPad tem 744 ou mais)
+
 const ESCURO_NA_PONTA = 0.55; // a continuação escurece aos poucos até a borda da tela

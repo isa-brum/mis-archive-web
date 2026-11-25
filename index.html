@@ -4,10 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#000000">
+  <!-- Se a pessoa adicionar o jogo à tela de início, ele abre sem as barras do navegador -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>MIS Archive</title>
   <link rel="icon" type="image/jpeg" sizes="1024x1024" href="assets/imagens/AppIcon.jpg?v=2">
   <link rel="apple-touch-icon" href="assets/imagens/AppIcon.jpg">
-  <link rel="stylesheet" href="estilo.css">
+  <link rel="stylesheet" href="estilo.css?v=3">
 </head>
 <body>
   <!-- Tudo aparece dentro de #tela; cada cena monta aqui o seu palco 4:3 -->
@@ -18,33 +22,38 @@
     <filter id="tira-riscos-em-pe" x="0" y="0" width="1" height="1" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="4 0" edgeMode="duplicate"/></filter>
   </svg>
   <div id="area-segura" aria-hidden="true"></div>
-  <p id="aviso-girar" aria-hidden="true"></p>
+  <div id="vire" role="alert" hidden>
+    <img src="assets/imagens/Fita.png" alt="">
+    <strong></strong>
+    <span></span>
+  </div>
 
+  <!-- ?v=: aumente o número ao publicar, para os celulares não misturarem arquivos novos e antigos -->
   <!-- Dados gerados a partir do app (ferramentas/copiar_assets.py) -->
-  <script src="dados/textos.js"></script>
-  <script src="dados/cores.js"></script>
-  <script src="dados/imagens.js"></script>
+  <script src="dados/textos.js?v=3"></script>
+  <script src="dados/cores.js?v=3"></script>
+  <script src="dados/imagens.js?v=3"></script>
 
   <!-- Base -->
-  <script src="js/config.js"></script>
-  <script src="js/idioma.js"></script>
-  <script src="js/palco.js"></script>
-  <script src="js/pecas.js"></script>
-  <script src="js/carregador.js"></script>
+  <script src="js/config.js?v=3"></script>
+  <script src="js/idioma.js?v=3"></script>
+  <script src="js/palco.js?v=3"></script>
+  <script src="js/pecas.js?v=3"></script>
+  <script src="js/carregador.js?v=3"></script>
 
   <!-- Peças do jogo -->
-  <script src="js/papeis.js"></script>
-  <script src="js/quadro.js"></script>
-  <script src="js/inventario.js"></script>
+  <script src="js/papeis.js?v=3"></script>
+  <script src="js/quadro.js?v=3"></script>
+  <script src="js/inventario.js?v=3"></script>
 
   <!-- Telas, na ordem do jogo -->
-  <script src="js/menu.js"></script>
-  <script src="js/about.js"></script>
-  <script src="js/missao1.js"></script>
-  <script src="js/ar.js"></script>
-  <script src="js/missao2.js"></script>
-  <script src="js/missao3.js"></script>
-  <script src="js/mesa.js"></script>
-  <script src="js/inicio.js"></script>
+  <script src="js/menu.js?v=3"></script>
+  <script src="js/about.js?v=3"></script>
+  <script src="js/missao1.js?v=3"></script>
+  <script src="js/ar.js?v=3"></script>
+  <script src="js/missao2.js?v=3"></script>
+  <script src="js/missao3.js?v=3"></script>
+  <script src="js/mesa.js?v=3"></script>
+  <script src="js/inicio.js?v=3"></script>
 </body>
 </html>

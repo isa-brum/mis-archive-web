@@ -83,7 +83,10 @@ html, body {
 .cheia { position: absolute; left: 0; top: 0; width: 2048px; height: 1536px; }
 .sem-toque { pointer-events: none; }
 .recorte { overflow: hidden; }
-.escuro, .cobertura { left: -6000px; top: -6000px; width: 14048px; height: 13536px; } /* cobre a tela toda */
+.escuro, .cobertura { /* cobre a tela toda, com folga */
+  left: calc(var(--tela-esq) - 300px); top: calc(var(--tela-topo) - 300px);
+  width: calc(var(--tela-dir) - var(--tela-esq) + 600px); height: calc(var(--tela-base) - var(--tela-topo) + 600px);
+}
 img { display: block; pointer-events: none; -webkit-user-drag: none; }
 img[data-quadro] { visibility: hidden; }
 img[data-quadro].visivel { visibility: visible; }
@@ -117,7 +120,7 @@ img[data-quadro].visivel { visibility: visible; }
 .botao:active:not(:disabled) > img { opacity: 0.7; }
 .botao:focus { outline: none; }
 .botao:focus-visible { outline: 6px solid var(--BrilhoExterno); outline-offset: 6px; border-radius: 12px; }
-.cobertura:focus-visible { outline-offset: -6020px; }
+.cobertura:focus-visible { outline-offset: -320px; }
 
 .botao-texto {
   color: var(--BrancoBase);
@@ -182,16 +185,24 @@ img[data-quadro].visivel { visibility: visible; }
 }
 @keyframes pulsar { from { opacity: 0.35; } to { opacity: 1; } }
 
-/* AVISO PARA VIRAR O CELULAR (só em telas de toque em pé) */
-#aviso-girar {
-  position: fixed; left: 24px; right: 24px; top: 14%; margin: 0; z-index: 40;
-  transform: translateY(-50%);
-  font-family: "Gibi", sans-serif; font-size: 20px; text-align: center; text-wrap: balance;
-  color: var(--TextoFeedback);
-  text-shadow: 0 0 10px rgba(252, 240, 180, 0.6);
-  opacity: 0; pointer-events: none; transition: opacity 0.6s;
+/* CELULAR: nada aparece fora da foto, como no app de iPhone */
+.celular .palco { overflow: hidden; }
+
+/* CELULAR EM PÉ: bloqueado. A fita deita em stop motion. */
+#vire {
+  position: fixed; inset: 0; z-index: 100; padding: 24px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  background: #000; color: var(--TextoFeedback); text-align: center;
+  font-family: "Gibi", sans-serif; line-height: 1; touch-action: none;
 }
-#aviso-girar.visivel { opacity: 1; }
+#vire img { width: 150px; margin-bottom: 34px; animation: deitar 2.4s steps(1) infinite; }
+#vire strong { font-size: 30px; font-weight: 700; text-wrap: balance; text-shadow: 0 0 10px rgba(252, 240, 180, 0.6); }
+#vire span { font-size: 18px; opacity: 0.6; text-wrap: balance; }
+@keyframes deitar {
+  /* o desenho da fita já é inclinado 28° */
+  0% { transform: rotate(-118deg); } 30% { transform: rotate(-96deg); } 36% { transform: rotate(-73deg); }
+  42% { transform: rotate(-50deg); } 48%, 100% { transform: rotate(-28deg); }
+}
 
 /* PAPÉIS */
 .texto-do-papel { color: var(--CinzaTexto); font-size: 100.7px; }

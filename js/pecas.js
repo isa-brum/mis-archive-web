@@ -35,6 +35,7 @@ const cheia = (nome) => img(nome, "cheia");
 function fundo(cena, nome) {
   const C = CONFIG, f = FUNDOS[nome];
   const el = camada("", [cheia(nome)]);
+  if (ehCelular) return el; // no celular as laterais são faixas pretas, como no app de iPhone
   el.style.setProperty("--escuro-na-ponta", ESCURO_NA_PONTA);
   const lados = {};
   for (const lado of ["esq", "dir", "topo", "base"]) {

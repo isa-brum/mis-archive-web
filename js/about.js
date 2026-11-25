@@ -82,7 +82,7 @@ async function abrirAbout(anterior) {
   cena.palco.style.visibility = "hidden";
   document.getElementById("tela").append(cena.elemento); // precisa estar na página para medir o texto
   cena.aoMedir((m) => {
-    const letra = m.compacto ? Math.round(limitar(CONFIG.letraMinimaDoAbout / m.escala, About.letraDoIPhone, About.letra)) : 0;
+    const letra = CONFIG.letraFixaDoAbout || (m.compacto ? Math.round(limitar(CONFIG.letraMinimaDoAbout / m.escala, About.letraDoIPhone, About.letra)) : 0);
     if (String(letra) === chave) return;
     const textosAntes = slides.filter((s) => s.html).length;
     chave = String(letra);
