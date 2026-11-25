@@ -40,16 +40,50 @@ html, body {
   position: absolute; left: 0; top: 0;
   width: 2048px; height: 1536px;
   transform-origin: 0 0;
-  overflow: hidden;
-  background: #000;
   font-family: "Gibi", sans-serif;
   line-height: 0.77; /* altura de linha que o app usa com a fonte do jogo (medida nos screenshots) */
   font-synthesis: none; /* a fonte não tem itálico: como no app, ele não é inventado */
 }
 
+#area-segura {
+  position: fixed; visibility: hidden; pointer-events: none;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* CONTINUAÇÃO DO CENÁRIO até as bordas da tela (fundo(), em js/pecas.js) */
+.continuacao {
+  position: absolute; overflow: hidden;
+  -webkit-mask-image: linear-gradient(var(--para), transparent, #000 16px);
+  mask-image: linear-gradient(var(--para), transparent, #000 16px);
+}
+.continuacao > img { position: absolute; clip-path: inset(5px); }
+.continuacao::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(var(--para), transparent 24px, rgba(0, 0, 0, var(--escuro-na-ponta)));
+}
+.continuacao.esq, .continuacao.dir { top: 0; height: 1536px; }
+.continuacao.topo, .continuacao.base { left: 0; width: 2048px; }
+/* Entra 24 px por cima da arte: os 16 de dentro se dissolvem nela e os 8 da ponta cobrem
+   o fio claro que a arte tem na última fileira de pixels */
+.continuacao.esq { right: 2024px; --para: to left; }
+.continuacao.dir { left: 2024px; --para: to right; }
+.continuacao.topo { bottom: 1512px; --para: to top; }
+.continuacao.base { top: 1512px; --para: to bottom; }
+/* A arte fica no lugar dela e vira para fora a 8 px da ponta (o espelho é o scale negativo).
+   O desfoque só no sentido da emenda tira os riscos que o esticado faria no grão do papel. */
+.continuacao.esq > img { left: calc(100% - 24px); transform-origin: 8px 0; }
+.continuacao.dir > img { left: auto; right: calc(100% - 24px); transform-origin: calc(100% - 8px) 0; }
+.continuacao.topo > img { top: calc(100% - 24px); transform-origin: 0 8px; }
+.continuacao.base > img { top: auto; bottom: calc(100% - 24px); transform-origin: 0 calc(100% - 8px); }
+.continuacao.esq > img, .continuacao.dir > img { filter: url(#tira-riscos-deitado); }
+.continuacao.topo > img, .continuacao.base > img { filter: url(#tira-riscos-em-pe); }
+.continuacao.nitido:is(.esq, .dir) > img { filter: url(#tira-riscos-pouco); }
+
 /* CAMADAS E PEÇAS */
 .cheia { position: absolute; left: 0; top: 0; width: 2048px; height: 1536px; }
 .sem-toque { pointer-events: none; }
+.recorte { overflow: hidden; }
+.escuro, .cobertura { left: -6000px; top: -6000px; width: 14048px; height: 13536px; } /* cobre a tela toda */
 img { display: block; pointer-events: none; -webkit-user-drag: none; }
 img[data-quadro] { visibility: hidden; }
 img[data-quadro].visivel { visibility: visible; }
@@ -59,6 +93,8 @@ img[data-quadro].visivel { visibility: visible; }
   transform: translate(-50%, -50%) translate(var(--dx, 0px), var(--dy, 0px)) rotate(var(--giro, 0deg)) scale(var(--escala, 1));
 }
 .peca > img { width: 100%; height: 100%; object-fit: contain; }
+
+.peca.pela-esquerda { transform: translate(0, -50%); }
 
 /* No meio da área visível, cabendo na largura visível */
 .grupo-central { transform: translateY(var(--ajuste-centro)) scale(var(--fator)); pointer-events: none; }
@@ -81,7 +117,7 @@ img[data-quadro].visivel { visibility: visible; }
 .botao:active:not(:disabled) > img { opacity: 0.7; }
 .botao:focus { outline: none; }
 .botao:focus-visible { outline: 6px solid var(--BrilhoExterno); outline-offset: 6px; border-radius: 12px; }
-.cobertura:focus-visible { outline-offset: -10px; }
+.cobertura:focus-visible { outline-offset: -6020px; }
 
 .botao-texto {
   color: var(--BrancoBase);
@@ -94,7 +130,7 @@ img[data-quadro].visivel { visibility: visible; }
 
 .idiomas {
   position: absolute; display: flex; gap: 30px; align-items: baseline;
-  transform: translate(-50%, -50%);
+  transform: translate(0, -50%);
   color: var(--BrancoBase); font-size: 74px; line-height: 1;
 }
 .idiomas .botao { position: relative; opacity: 0.55; font-weight: 700; }
@@ -148,9 +184,9 @@ img[data-quadro].visivel { visibility: visible; }
 
 /* AVISO PARA VIRAR O CELULAR (só em telas de toque em pé) */
 #aviso-girar {
-  position: fixed; left: 24px; right: 24px; top: 0; margin: 0; z-index: 40;
+  position: fixed; left: 24px; right: 24px; top: 14%; margin: 0; z-index: 40;
   transform: translateY(-50%);
-  font-family: "Gibi", sans-serif; font-size: 20px; text-align: center;
+  font-family: "Gibi", sans-serif; font-size: 20px; text-align: center; text-wrap: balance;
   color: var(--TextoFeedback);
   text-shadow: 0 0 10px rgba(252, 240, 180, 0.6);
   opacity: 0; pointer-events: none; transition: opacity 0.6s;

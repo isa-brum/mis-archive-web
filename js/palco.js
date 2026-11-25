@@ -7,7 +7,8 @@ const limitar = (v, min, max) => Math.min(Math.max(v, min), max);
 const misturar = (a, b, t) => a + (b - a) * t;
 
 // Calcula escala, corte e área visível para uma janela de L × A
-function medirPalco(L, A, ancora) {
+// posicao: onde a arte fica quando sobra altura. segura: áreas do notch etc., em pixels da tela.
+function medirPalco(L, A, ancora, posicao = 0.5, segura = { esq: 0, dir: 0, topo: 0, base: 0 }) {
   const C = CONFIG;
   const encaixar = Math.min(L / C.largura, A / C.altura);
   const preencher = Math.max(L / C.largura, A / C.altura);
@@ -29,11 +30,19 @@ function medirPalco(L, A, ancora) {
   }
   if (sobraX < 0) corteLado = -sobraX / escala / 2;
 
+  // Tela inteira em pixels do canvas, contando a continuação do cenário
+  const dx = sobraX / 2; // continuação e corte laterais sempre centralizados
+  const dy = sobraY >= 0 ? sobraY * posicao : -corteSup * escala;
+  const tela = { esq: -dx / escala, dir: (L - dx) / escala, topo: -dy / escala, base: (A - dy) / escala };
+  // Canto da tela com uma margem, sem entrar embaixo do notch
+  const canto = (margem) => ({
+    esq: tela.esq + Math.max(margem, segura.esq / escala), dir: tela.dir - Math.max(margem, segura.dir / escala),
+    topo: tela.topo + Math.max(margem, segura.topo / escala), base: tela.base - Math.max(margem, segura.base / escala),
+  });
+
   return {
-    escala, k, corteInf,
-    dx: sobraX / 2, // faixas e corte laterais sempre centralizados
-    dy: sobraY >= 0 ? sobraY / 2 : -corteSup * escala,
-    // Área do canvas que aparece na tela
+    escala, k, corteInf, dx, dy, tela, canto,
+    // Parte da arte que aparece na tela
     esq: corteLado, dir: C.largura - corteLado,
     topo: corteSup, base: C.altura - corteInf,
     larguraVisivel: C.largura - 2 * corteLado,
@@ -46,12 +55,20 @@ function medirPalco(L, A, ancora) {
   };
 }
 
-// UMA CENA: fundo preto da tela + palco escalado
+// Áreas do notch e da barra de gestos
+function areaSegura() {
+  const e = getComputedStyle(document.getElementById("area-segura"));
+  const n = (v) => parseFloat(v) || 0;
+  return { esq: n(e.paddingLeft), dir: n(e.paddingRight), topo: n(e.paddingTop), base: n(e.paddingBottom) };
+}
+
+// UMA CENA: palco escalado, que preenche a tela
 class Cena {
   static vivas = new Set();
 
-  constructor(ancora = CONFIG.ancoraDoCentro) {
+  constructor(ancora = CONFIG.ancoraDoCentro, posicao = 0.5) {
     this.ancora = ancora;
+    this.posicao = posicao;
     this.viva = true;
     this.ouvintes = [];
     this.elemento = document.createElement("section");
@@ -65,7 +82,7 @@ class Cena {
 
   medir() {
     const tela = document.getElementById("tela");
-    const m = this.m = medirPalco(tela.clientWidth || innerWidth, tela.clientHeight || innerHeight, this.ancora);
+    const m = this.m = medirPalco(tela.clientWidth || innerWidth, tela.clientHeight || innerHeight, this.ancora, this.posicao, areaSegura());
     this.palco.style.transform = `translate(${m.dx}px, ${m.dy}px) scale(${m.escala})`;
     this.palco.style.setProperty("--toque", m.toque + "px");
     this.palco.style.setProperty("--ajuste-centro", m.ajusteCentro + "px");

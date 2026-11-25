@@ -15,7 +15,7 @@ function ajustarTudo() {
   atualizarAvisoDeGirar();
 }
 
-// Celular em pé: sugere virar, embaixo do jogo, por alguns segundos (não impede de jogar)
+// Celular em pé: sugere virar, em cima do jogo, por alguns segundos (não impede de jogar)
 function atualizarAvisoDeGirar() {
   const aviso = document.getElementById("aviso-girar");
   const agora = telaDeToque && innerWidth < 600 && innerHeight > innerWidth * 1.3;
@@ -25,8 +25,6 @@ function atualizarAvisoDeGirar() {
   clearTimeout(relogioDoAviso);
   aviso.classList.toggle("visivel", agora);
   if (!agora) return;
-  const m = medirPalco(innerWidth, innerHeight, 0.5);
-  aviso.style.top = (innerHeight + m.dy + CONFIG.altura * m.escala) / 2 + "px";
   relogioDoAviso = setTimeout(() => aviso.classList.remove("visivel"), 8000);
 }
 atualizarAvisoDeGirar();

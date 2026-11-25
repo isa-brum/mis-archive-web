@@ -15,7 +15,7 @@ Para parar: clique na lixeira do terminal.
 
 | O quê | Arquivo |
 |---|---|
-| Corte máximo, margens, tempos, botão de idioma | `js/config.js` |
+| Corte máximo, continuação do cenário, tamanho dos botões, margens, tempos, idioma | `js/config.js` |
 | Regra do palco e do corte | `js/palco.js` |
 | Cores, fontes, brilhos, sombras | `estilo.css` |
 | Textos do jogo | vêm do app (`Localizable.xcstrings`) |
@@ -26,11 +26,13 @@ Para parar: clique na lixeira do terminal.
 
 Toda cena é montada em 2048 × 1536 e escalada inteira. O corte nunca passa do da versão de iPhone:
 aparece sempre, no mínimo, do pixel 89 ao 1318 (altura) e do 49 ao 1999 (largura).
-O que sobrar de tela vira faixa preta. Textos, botões e inventário se movem para a área visível.
+Não há faixas pretas: o que sobrar de tela é preenchido pela continuação do próprio cenário (a beirada lisa da parede,
+do chão ou da mesa se estende, escurecendo até a borda; a foto não é cortada nem alterada). Ajustes em `FUNDOS`, no fim
+do `js/config.js`. Botões de canto e inventário vão para os cantos da tela, sem entrar embaixo do notch.
 
 ## Idioma
 
-Segue o idioma do navegador; o "pt en" do menu troca e fica guardado.
+Segue o idioma do navegador; o "pt en" (menu, em cima à esquerda) troca e fica guardado.
 Links diretos: `index.html?lang=pt` e `index.html?lang=en`.
 Para tirar o botão do menu: `mostrarBotaoDeIdioma: false` em `js/config.js`.
 

@@ -3,7 +3,7 @@
 
 async function abrirMissao1(anterior) {
   await Carregador.pronto("missao1", "ar");
-  const cena = new Cena(CONFIG.ancoraDaSala);
+  const cena = new Cena(CONFIG.ancoraDaSala, FUNDOS.CenarioBase.posicao);
   let overlay = null;
   let dica = null;
 
@@ -15,7 +15,7 @@ async function abrirMissao1(anterior) {
   ar.disabled = true;
 
   const sala = camada("desfocavel", [
-    cheia("CenarioBase"),
+    fundo(cena, "CenarioBase"),
     gaveta("GavetaA", 395.3, 645.1, 303.1, 227.3),
     gaveta("GavetaB", 391.2, 875.5, 301.1, 225.8),
     gaveta("GavetaC", 401.4, 1102.8, 325.6, 244.2),

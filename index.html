@@ -12,6 +12,12 @@
 <body>
   <!-- Tudo aparece dentro de #tela; cada cena monta aqui o seu palco 4:3 -->
   <main id="tela"></main>
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute">
+    <filter id="tira-riscos-deitado" x="0" y="0" width="1" height="1" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="0 4" edgeMode="duplicate"/></filter>
+    <filter id="tira-riscos-pouco" x="0" y="0" width="1" height="1" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="0 1.2" edgeMode="duplicate"/></filter>
+    <filter id="tira-riscos-em-pe" x="0" y="0" width="1" height="1" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="4 0" edgeMode="duplicate"/></filter>
+  </svg>
+  <div id="area-segura" aria-hidden="true"></div>
   <p id="aviso-girar" aria-hidden="true"></p>
 
   <!-- Dados gerados a partir do app (ferramentas/copiar_assets.py) -->

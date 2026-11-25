@@ -3,7 +3,7 @@
 
 async function abrirMissao2(anterior) {
   await Carregador.pronto("missao2");
-  const cena = new Cena(CONFIG.ancoraDaSala);
+  const cena = new Cena(CONFIG.ancoraDaSala, FUNDOS.CenarioBase.posicao);
   const itens = new Set();
   // "introPapel" → "esperandoQuadro" → "quadro" → "avisoExplorar" → "exploracao" → "concluida"
   let estado = "introPapel";
@@ -36,7 +36,7 @@ async function abrirMissao2(anterior) {
   const avisos = camada("sem-toque");
 
   const sala = camada("desfocavel", [
-    cheia("CenarioBase"), lixoCheio, ar, quadro, gavetaA, gavetaB, gavetaC, fita, filme.elemento,
+    fundo(cena, "CenarioBase"), lixoCheio, ar, quadro, gavetaA, gavetaB, gavetaC, fita, filme.elemento,
     camadaDaMesa, lixo, conversor, avisos]);
   const inventario = new Inventario(cena, itens);
   inventario.elemento.hidden = true;

@@ -30,13 +30,13 @@ const About = {
 
 async function abrirAbout(anterior) {
   await Carregador.pronto("about");
-  const cena = new Cena(CONFIG.ancoraDaSala);
+  const cena = new Cena(CONFIG.ancoraDaSala, FUNDOS.FundoAbout.posicao);
   let slides = [];
   let atual = 0;
   let trocando = false;
 
   const menu = botaoDeTexto("Menu", () => abrirMenu(cena));
-  posicionarBotaoMenu(cena, menu);
+  posicionarNoCantoDeCima(cena, menu);
 
   const monitor = peca({ x: 1034.2, y: 525.3, largura: 983, altura: 614.4 });
   const legenda = feedbackDoAbout(cena);
@@ -47,7 +47,7 @@ async function abrirAbout(anterior) {
                           aoClicar: () => irPara(atual + 1) });
   esquerda.style.opacity = direita.style.opacity = "0.85";
 
-  cena.adicionar(cheia("FundoAbout"), menu, monitor, legenda, esquerda, direita);
+  cena.adicionar(fundo(cena, "FundoAbout"), menu, monitor, legenda, esquerda, direita);
 
   function desenhar() {
     const slide = slides[atual];

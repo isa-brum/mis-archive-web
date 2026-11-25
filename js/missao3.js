@@ -3,7 +3,7 @@
 
 async function abrirMissao3(anterior) {
   await Carregador.pronto("missao3");
-  const cena = new Cena(CONFIG.ancoraDaSala);
+  const cena = new Cena(CONFIG.ancoraDaSala, FUNDOS.CenarioBase.posicao);
   const itens = new Set(["Fita", "Conversor"]);
   // "intro" → "esperandoQuadro" → "quadro" → "avisoMesa" → "exploracao"
   let estado = "intro";
@@ -17,7 +17,7 @@ async function abrirMissao3(anterior) {
   } });
   const avisos = camada("sem-toque");
   const sala = camada("desfocavel", [
-    cheia("CenarioBase"), cheia("LixoCheio"),
+    fundo(cena, "CenarioBase"), cheia("LixoCheio"),
     peca({ x: 544.8, y: 284.2, largura: 475.1, altura: 356.4, imagem: "ArConsertadoCenario" }),
     gaveta("GavetaA", 395.3, 639.0, 303.1, 227.3),
     gaveta("GavetaB", 391.2, 869.4, 301.1, 225.8),

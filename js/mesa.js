@@ -14,7 +14,7 @@ const Mesa = {
 
 async function abrirMesa(anterior, itens) {
   await Carregador.pronto("mesa");
-  const cena = new Cena(CONFIG.ancoraDaSala);
+  const cena = new Cena(CONFIG.ancoraDaSala, FUNDOS.CenarioBaseMesa.posicao);
   // "pedeFita" → "animandoFita" → "pedeRewind" → "rebobinando" → "pedeConversor" → "animandoConversor"
   // → "pedePlay" → "digitizando" → "finalizado"
   let fase = "pedeFita";
@@ -28,7 +28,7 @@ async function abrirMesa(anterior, itens) {
   const play = tecla("Start", "Play tape", 1470.5, 937, iniciarPlay);
   const rewind = tecla("ReButton", "Rewind", 1382.4, 932.4, iniciarRewind);
 
-  const mesa = camada("", [cheia("CenarioBaseMesa"), filmeDaFita.elemento, ...conversor, rebobinando, play, rewind]);
+  const mesa = camada("", [fundo(cena, "CenarioBaseMesa"), filmeDaFita.elemento, camada("sem-toque recorte", conversor), rebobinando, play, rewind]);
   const avisos = camada("sem-toque");
   const inventario = new Inventario(cena, itens, soltar);
   cena.adicionar(mesa, avisos, inventario.elemento);
@@ -128,7 +128,7 @@ async function abrirMesa(anterior, itens) {
     Object.assign(janela.style, { left: t.x + "px", top: t.y + "px", width: t.largura + "px", height: t.altura + "px" });
     Object.assign(video.style, { height: Mesa.alturaDoVideo + "px", top: -Mesa.inicioVisivel * Mesa.alturaDoVideo + "px" });
     janela.append(video);
-    const monitor = camada("desfocavel", [cheia("FundoAbout"), janela]);
+    const monitor = camada("desfocavel", [fundo(cena, "FundoAbout"), janela]);
     mesa.replaceWith(monitor);
     const terminou = new Promise((r) => video.addEventListener("ended", r, { once: true }));
     video.currentTime = 0;
@@ -161,7 +161,7 @@ async function abrirMesa(anterior, itens) {
     acimaDasFrases(cena, quadro, { x: 1024, y: 645.1 }, { escala: 0.76, novoCentroY: 555 });
     const menu = botaoDeTexto("Menu", () => { menu.disabled = true; abrirMenu(cena); });
     menu.style.zIndex = 100;
-    posicionarBotaoMenu(cena, menu);
+    posicionarNoCantoDeCima(cena, menu);
     const final = camada("", [
       quadro, menu,
       frasesDeFim(cena, "Well done!", "You pushed through every difficulty and helped preserve an important piece of the city’s memory", 122.9),

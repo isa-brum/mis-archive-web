@@ -11,7 +11,7 @@ function camada(classe = "", filhos = []) {
 
 // Escurecimento do fundo
 function escuro(opacidade) {
-  const el = camada();
+  const el = camada("escuro");
   el.style.background = `rgba(0, 0, 0, ${opacidade})`;
   return el;
 }
@@ -29,6 +29,33 @@ function img(nome, classe = "") {
 
 // Imagem que cobre o canvas inteiro (fundos e camadas de animação)
 const cheia = (nome) => img(nome, "cheia");
+
+// Fundo da cena + a continuação dele até as bordas da tela. A beirada lisa da arte é espelhada
+// e esticada para fora; a foto em si fica inteira e intocada.
+function fundo(cena, nome) {
+  const C = CONFIG, f = FUNDOS[nome];
+  const el = camada("", [cheia(nome)]);
+  el.style.setProperty("--escuro-na-ponta", ESCURO_NA_PONTA);
+  const lados = {};
+  for (const lado of ["esq", "dir", "topo", "base"]) {
+    const faixa = lados[lado] = document.createElement("div");
+    faixa.className = `continuacao ${lado}${f.nitido ? " nitido" : ""}`;
+    faixa.append(cheia(nome));
+    el.append(faixa);
+  }
+  cena.aoMedir((m) => {
+    const sobra = { esq: -m.tela.esq, dir: m.tela.dir - C.largura, topo: -m.tela.topo, base: m.tela.base - C.altura };
+    for (const [lado, faixa] of Object.entries(lados)) {
+      const t = sobra[lado] + 25; // 24 px por cima da arte, onde a emenda se dissolve
+      faixa.hidden = sobra[lado] <= 0.5;
+      if (faixa.hidden) continue;
+      const deitado = lado === "esq" || lado === "dir";
+      faixa.style[deitado ? "width" : "height"] = t + "px";
+      faixa.firstChild.style.transform = `scale${deitado ? "X" : "Y"}(${-Math.max(1, t / f[lado])})`;
+    }
+  });
+  return el;
+}
 
 // Peça posicionada pelo centro (x, y), como o .position do SwiftUI.
 // A imagem cabe inteira na caixa largura × altura, sem distorcer.
@@ -65,7 +92,9 @@ function botaoDaTela(rotulo, aoClicar) {
 
 // Botão de texto sublinhado ("sobre", "menu")
 function botaoDeTexto(chave, aoClicar) {
-  return botao({ classe: "botao-texto", html: textoHTML(chave), aoClicar });
+  const el = botao({ classe: "botao-texto", html: textoHTML(chave), aoClicar });
+  el.style.fontSize = 104.1 * CONFIG.tamanhoDosBotoes + "px";
+  return el;
 }
 
 // Deslocamento extra de uma peça, somado à posição
@@ -125,15 +154,21 @@ function acimaDasFrases(cena, grupo, centro, { escala = 0.92, novoCentroY = 545 
   });
 }
 
-// "menu" (About e tela final): a mesma distância do topo que o "sobre" tem da base
-function posicionarBotaoMenu(cena, el) {
+// "menu" (About e tela final): canto de cima, à esquerda, da tela.
+// A mesma distância do topo que o "sobre" tem da base.
+function posicionarNoCantoDeCima(cena, el) {
+  el.classList.add("pela-esquerda");
   cena.aoMedir((m) => {
-    const C = CONFIG;
-    const margem = misturar((m.base - m.topo) * (1 - C.fracaoDoAbout) - C.meiaAlturaDosBotoesDeTexto,
-                            C.margemDoCorteInferior, m.k);
-    el.style.left = m.esq + 163.8 + "px";
-    el.style.top = m.topo + margem + C.meiaAlturaDosBotoesDeTexto + "px";
+    const c = m.canto(CONFIG.margemDosCantos);
+    el.style.left = c.esq + "px";
+    el.style.top = c.topo + distanciaDaBorda(m) - CONFIG.margemDosCantos + "px";
   });
+}
+
+// Distância do centro dos botões de texto até a borda da tela, em cima ou embaixo
+function distanciaDaBorda(m) {
+  const C = CONFIG;
+  return misturar((m.base - m.topo) * (1 - C.fracaoDoAbout), C.margemDoCorteInferior + C.meiaAlturaDosBotoesDeTexto, m.k);
 }
 
 // STOP MOTION: todos os quadros ficam no palco, um visível por vez

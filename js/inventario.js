@@ -93,7 +93,7 @@ class Inventario {
   posicionar(m) {
     const margem = m.compacto ? 30 : 52.1;
     const amp = m.compacto ? limitar(40 / (150.4 * m.escala), 1.05, 1.2) : 1;
-    const x = m.dir - margem - 79 * amp;
+    const x = m.canto(margem).dir - 79 * amp; // canto da tela, sem entrar embaixo do notch
     const yFita = m.topo + margem + 68.4 * amp;
     const yConversor = yFita + 167 * amp;
     for (const [nome, y] of [["Fita", yFita], ["Conversor", yConversor]]) {

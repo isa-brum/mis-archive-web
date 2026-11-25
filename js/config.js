@@ -8,8 +8,8 @@ const CONFIG = {
   altura: 1536,
 
   // Corte máximo em telas largas (celular deitado, computador): igual ao do iPhone.
-  // 1,25 = aparece do pixel ~89 ao ~1318 do canvas. Nunca corta mais do que isso;
-  // o que sobrar de tela vira faixa preta nas laterais.
+  // 1,25 = aparece do pixel ~89 ao ~1318 do canvas. Nunca corta mais do que isso.
+  // O que sobrar de tela é preenchido pela continuação do próprio cenário (FUNDOS, no fim).
   zoomMaximo: 1.25,
   corteDoIPhone: 0.29, // 0 = corta tudo embaixo, 0,5 = igual em cima e embaixo
   corteMaximoEmCima: 89.1, // pixels do canvas
@@ -38,7 +38,9 @@ const CONFIG = {
   fracaoDoAbout: 0.9167, fracaoDoAboutNoIPhone: 0.9215,
   fracaoDoPlay: 0.889, fracaoDoPlayNoIPhone: 0.86,
   meiaAlturaDosBotoesDeTexto: 57,
-  mostrarBotaoDeIdioma: true, // "pt · en" no menu
+  mostrarBotaoDeIdioma: true, // "pt en" no canto de cima, à esquerda, do menu
+  tamanhoDosBotoes: 0.85, // "sobre", "menu" e "jogar" (1 = tamanho do app)
+  margemDosCantos: 80, // distância dos textos de canto até a borda da tela
 
   // ANIMAÇÃO
   duracaoDoQuadro: 0.12, // stop motion
@@ -51,3 +53,16 @@ const CONFIG = {
   // ABOUT: no celular a letra nunca fica menor que isto na tela (o texto se divide em mais telas)
   letraMinimaDoAbout: 13.5,
 };
+
+// CONTINUAÇÃO DO CENÁRIO — quando a tela é mais larga (ou mais alta) que a arte com o corte máximo,
+// a beirada lisa da arte (parede, chão, tampo da mesa) se estende até a borda da tela.
+// A arte em si não muda nem é cortada. Cada número diz quantos pixels da beirada são usados
+// (só a parte sem objetos). "posicao": em telas altas, 0 = arte em cima, 0,5 = no meio, 1 = embaixo.
+// "nitido": menos desfoque, para as linhas do tampo da mesa continuarem definidas.
+const FUNDOS = {
+  FundoMenu:       { esq: 46, dir: 340, topo: 600, base: 6,  posicao: 1 },
+  CenarioBase:     { esq: 60, dir: 42,  topo: 460, base: 84, posicao: 0.72 },
+  CenarioBaseMesa: { esq: 26, dir: 26,  topo: 440, base: 30, posicao: 0.6, nitido: true },
+  FundoAbout:      { esq: 8,  dir: 8,   topo: 130, base: 24, posicao: 0.5 },
+};
+const ESCURO_NA_PONTA = 0.55; // a continuação escurece aos poucos até a borda da tela
